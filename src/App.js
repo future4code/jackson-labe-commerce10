@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Cart from './components/Cart/Cart'
+import Filter from './components/Filter'
 
 
 const ContainerCarrinho = styled.div ` 
@@ -19,20 +20,6 @@ const ContainerImg = styled.figure`
   margin: .3em;
   padding: .4em;
 `;  
-const ContainerImg = styled.figure`
-  width: 85%;
-  text-align: center;
-  font-weight: 550;
-  font-size: 2.2rem;
-  border: thin solid white;
-  margin: .3em;
-  padding: .4em;
-  box-shadow: -5px 5px;
-
-  @media (min-width: 698px){
-    margin:0%;
-  }
-`;
 
 const Image = styled.img`
   width: 90%;
@@ -116,18 +103,6 @@ const Text = styled.h5`
   font-family: sans-serif;
 `;
 
-const Button = styled.button ` 
-  font-size: 16px;
-  width: 90%;
-  margin-left: 15px;
-  
-  &:hover{
-    color: #FFf;
-    background-color: #696969;
-    
-  }
-`;
-
 export class App extends React.Component{
   state={
     cardProducts:[
@@ -180,6 +155,11 @@ export class App extends React.Component{
         price: 59.99
       }
     ],
+
+    minInputValue: 0,
+    maxInputValue: Infinity,
+    searchByName: "",
+
     carrinho:  [],
     orderProducts: "Preço: Crescente"
   };
@@ -201,7 +181,28 @@ export class App extends React.Component{
     this.setState({
       orderProducts: event.target.value
     });
+  }
 
+  filterProducts = () => {
+    const filterCurrentProducts = this.state.cardProducts.filter((produto) => {
+      if (this.state.maxInputValue !==0 ) {
+        return produto.price >= this.state.minInputValue &&
+               produto.price <= this.state.maxInputValue;
+      } else {
+        return this.setState({maxInputValue: Infinity}, this.filterProducts)
+      }
+    });
+
+    this.setState({produtos: filterCurrentProducts})
+  }
+
+  updateMinInputValue = (newMinInputValue) => {
+    this.setState({minInputValue: newMinInputValue}, this.filterProducts)
+  }
+
+  updateMaxInputValue = (newMaxInputValue) => {
+    this.setState({maxInputValue: newMaxInputValue}, this.filterProducts)
+  } 
 
   /* Adcionando ao carrinho */
 
@@ -281,6 +282,10 @@ export class App extends React.Component{
           </MenuSuspenso>
         </Header>
 
+        <Filter
+          onMinValueFilterChange={this.updateMinInputValue}
+          onMaxValueFilterChange={this.updateMaxInputValue}
+        />
         <BigContainer>
           {renderizeCard}
         </BigContainer>
