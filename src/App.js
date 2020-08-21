@@ -1,62 +1,97 @@
-import React from 'react';
-import './App.css';
-import Produtos from './components/Produtos/Produtos'
+import React from 'react'
+import styled from 'styled-components'
 import Carrinho from './components/Carrinho/Carrinho'
-
-import styled, { ThemeConsumer } from 'styled-components';
-
-/* Estilos */
-
-
 
 const ContainerCarrinho = styled.div ` 
     border: 1px solid #000;
     background-color:#C0C0C0;
 `
 
+const ContainerImg = styled.figure`
+  float: rigth;
+  width: 30%;
+  text-align: center;
+  font-weight: 550;
+  font-size: 2.2rem;
+  border: thin solid white;
+  margin: .3em;
+  padding: .4em;
+`;
 
-const ContainerApp = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
-  padding: 16px;
-  gap: 8px;
-`
+const Imagem = styled.img`
+  width: 90%;
+`;
 
-const produtos = [
-     {
-       id: 1,
-        name: "Foguete da Missão Apollo 11",
-        value: 1200.00,
-        imageUrl: "https://picsum.photos/200/200",
-     },
-     {
-        id: 4,
-        name: "Foguete deborah",
-        value: 80,
-        imageUrl: "https://picsum.photos/200/200",
-     },
-     {
+const FigCaption = styled.figcaption`
+  display: flex;
+  flex-direction:column;
+`;
 
-        id: 2,
-        name: "Foguete Machado",
-        value: 100,
-        imageUrl: "https://picsum.photos/200/200",
-     }
-      ]
+const BigContainer = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100vw;
+  background-color: #314772;
+`;
 
 
-class App extends React.Component{
-  
-  state = {
-    produtos : produtos,
+const Text = styled.h5`
+  font-size: 1rem;
+  text-align: left;
+  padding-left: .5em;
+  margin:0;
+`;
+
+export class App extends React.Component{
+  state={
+    cardProducts:[
+      {
+      imageUrl: <Imagem src= "/imagens/temme1.jpg"/>,
+      temme: 1,
+      price: 79.99
+      },
+      {
+      imageUrl: <Imagem src= "/imagens/temme2.jpg"/>,
+      temme: 2,
+      price: 49.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme3.jpg"/>,
+        temme: 3,
+      price: 59.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme4.jpg"/>,
+        temme: 4,
+      price: 29.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme5.jpg"/>,
+        temme: 5,
+      price: 29.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme6.jpg"/>,
+        temme: 6,
+      price: 49.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme7.jpg"/>,
+        temme: 7,
+      price: 79.99
+      },
+      {
+        imageUrl: <Imagem src= "/imagens/temme8.jpg"/>,
+        temme: 8,
+      price: 59.99
+      }
+    ],
+    
     carrinho:  [],
-    /* prodMax : "",
-    prodMini: "", */
-
   }
 
-
-      /* Adcionando ao carrinho */
+  /* Adcionando ao carrinho */
      adicionarProdutoCarrinho = (id) => {
        console.log("ola")
       let novoCarrinho = this.state.carrinho
@@ -78,7 +113,6 @@ class App extends React.Component{
             quantidade: 1
         }
 
-       
         novoCarrinho.push(produtoAddCarrinho)
         /* console.log(novoCarrinho, "novo carrinho") */
 
@@ -92,9 +126,7 @@ class App extends React.Component{
     console.log(novoCarrinho, "novo carrinho")
     this.setState({ carrinho: novoCarrinho })
 }
-
-            
-           
+                     
   //Removendo o produto do carrinho
   removerProdutoCarrinho = (produtoId) => {
       const removeProdutoCarrinho = this.state.carrinho.filter(produto => {
@@ -103,16 +135,25 @@ class App extends React.Component{
     this.setState({carrinho : removeProdutoCarrinho})
   }
 
-     render(){
-
-        return (
-           <ContainerApp >
-            <Produtos
-              imagem="https://image.flaticon.com/icons/png/512/117/117472.png"
-             produtosDoApp = {this.state.produtos}
-             adicionarProdutoCarrinho = {this.adicionarProdutoCarrinho}
-            /> 
-          <ContainerCarrinho>
+  render() {
+    const renderizeCard = this.state.cardProducts.map((products) =>{
+      return(
+        <ContainerImg>
+            {products.imageUrl}
+          <FigCaption>
+            {products.price}
+            <button>Adicionar ao carrinho</button>
+          </FigCaption>
+        </ContainerImg>
+        
+      )
+    })
+    return (
+      <BigContainer>
+          <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
+        {renderizeCard}
+      
+        <ContainerCarrinho>
 
             <Carrinho
             addProdutosCarrinho = {this.state.carrinho}
@@ -121,11 +162,11 @@ class App extends React.Component{
             />
           
           </ContainerCarrinho>
-           </ContainerApp>
-
-
-  );
- }
+      </BigContainer>
+    );
+  }
 }
+
+
 
 export default App;
