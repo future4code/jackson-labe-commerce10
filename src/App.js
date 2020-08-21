@@ -1,33 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-<<<<<<< HEAD
 import Cart from './components/Cart/Cart'
-=======
-import Carrinho from './components/Carrinho/Carrinho'
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
+
 
 const ContainerCarrinho = styled.div ` 
     border: 1px solid #000;
     background-color:#C0C0C0;
-    
-`
-<<<<<<< HEAD
-const ContainerApp = styled.div `
-  display: flex;
- `
-
-const BigContainer = styled.main`
-  /* grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 2fr); 
-  justify-items: center;
-  align-items: center;*/
-  background-color: #314772; 
-  flex-direction: column; 
-  grid-template-columns: 1fr 3fr 1fr;
-  padding: 16px;
-  gap: 8px;
-  justify-content: center;
-  width: 100vw;
    
 `;
 
@@ -40,23 +18,25 @@ const ContainerImg = styled.figure`
   border: thin solid white;
   margin: .3em;
   padding: .4em;
-  
-=======
-
+`;  
 const ContainerImg = styled.figure`
-  float: rigth;
-  width: 30%;
+  width: 85%;
   text-align: center;
   font-weight: 550;
   font-size: 2.2rem;
   border: thin solid white;
   margin: .3em;
   padding: .4em;
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
+  box-shadow: -5px 5px;
+
+  @media (min-width: 698px){
+    margin:0%;
+  }
 `;
 
-const Imagem = styled.img`
+const Image = styled.img`
   width: 90%;
+  height: 70%;
 `;
 
 const FigCaption = styled.figcaption`
@@ -64,29 +44,78 @@ const FigCaption = styled.figcaption`
   flex-direction:column;
 `;
 
-<<<<<<< HEAD
-const Text = styled.h5`
-  /* display: flex;
-  justify-content: space-between; */
-=======
-const BigContainer = styled.main`
+const Paragrafe = styled.p`
+  font-size: 1rem;
+  color:  red;
+  margin-bottom: 2px;
+`;
+
+const Button = styled.button`
+  height: 5%;
+  width: 50%;
+  border-radius: 7px;
+  position: relative;
+  left: 25%;
+  word-wrap: break-word;
+  font-size: .5em;
+  :hover{
+    outline:none
+  };
+  :focus{
+    outline:none;
+    box-shadow: 4px 4px withe
+  };
+`;
+
+const Father = styled.main`
+  
+`;
+
+const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100vw;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #314772;
+
+  @media (min-width: 698px){
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    align-items: center;
+    justify-items: center;
+  }
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   background-color: #314772;
 `;
 
+const MenuSuspenso = styled.select`
+  margin: 15px;
+  width: 20%;
+  box-shadow: -4px 4px;
+  height: 40%;
+  :focus{
+    outline:none;
+  };
+`;
 
 const Text = styled.h5`
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
   font-size: 1rem;
   text-align: left;
   padding-left: .5em;
-  margin:0;
+  margin:5px;
+  padding-top: 10px;
+  color: white;
+  text-shadow: -3px 2px black;
+  font-family: sans-serif;
 `;
 
-<<<<<<< HEAD
 const Button = styled.button ` 
   font-size: 16px;
   width: 90%;
@@ -97,102 +126,85 @@ const Button = styled.button `
     background-color: #696969;
     
   }
-`
+`;
 
 export class App extends React.Component{
   state={
     cardProducts:[
-        {
-        imageUrl: <Imagem src= "/imagens/temme1.jpg"/>,
+      {
+        name: "camisa-1",
+        imageUrl: <Image src= "/imagens/temme1.jpg"/>,
         id: 1,
         price: 79.99
-        },
+      },
       {
-        imageUrl: <Imagem src= "/imagens/temme2.jpg"/>,
+        name: "camisa-2",
+        imageUrl: <Image src= "/imagens/temme2.jpg"/>,
         id: 2,
         price: 49.99
-        },
+      },
       {
-        imageUrl: <Imagem src= "/imagens/temme3.jpg"/>,
+        name: "camisa-3",
+        imageUrl: <Image src= "/imagens/temme3.jpg"/>,
         id: 3,
         price: 59.99
       },
-        {
-          imageUrl: <Imagem src= "/imagens/temme4.jpg"/>,
-          id: 4,
-          price: 29.99
+      {
+        name: "camisa-4",
+        imageUrl: <Image src= "/imagens/temme4.jpg"/>,
+        id: 4,
+        price: 29.99
       },
-        {
-          imageUrl: <Imagem src= "/imagens/temme5.jpg"/>,
-          id: 5,
-          price: 29.99
+      {
+        name: "camisa-5",
+        imageUrl: <Image src= "/imagens/temme5.jpg"/>,
+        id: 5,
+        price: 29.99
       },
-        {
-        imageUrl: <Imagem src= "/imagens/temme6.jpg"/>,
+      {
+        name: "camisa-6",
+        imageUrl: <Image src= "/imagens/temme6.jpg"/>,
         id: 6,
         price: 49.99
       },
-        {
-          imageUrl: <Imagem src= "/imagens/temme7.jpg"/>,
-          id: 7,
-          price: 79.99
-      },
-        {
-          imageUrl: <Imagem src= "/imagens/temme8.jpg"/>,
-          id: 8,
-          price: 59.99
-=======
-export class App extends React.Component{
-  state={
-    cardProducts:[
       {
-      imageUrl: <Imagem src= "/imagens/temme1.jpg"/>,
-      temme: 1,
-      price: 79.99
+        name: "camisa-7",
+        imageUrl: <Image src= "/imagens/temme7.jpg"/>,
+        id: 7,
+        price: 79.99
       },
       {
-      imageUrl: <Imagem src= "/imagens/temme2.jpg"/>,
-      temme: 2,
-      price: 49.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme3.jpg"/>,
-        temme: 3,
-      price: 59.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme4.jpg"/>,
-        temme: 4,
-      price: 29.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme5.jpg"/>,
-        temme: 5,
-      price: 29.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme6.jpg"/>,
-        temme: 6,
-      price: 49.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme7.jpg"/>,
-        temme: 7,
-      price: 79.99
-      },
-      {
-        imageUrl: <Imagem src= "/imagens/temme8.jpg"/>,
-        temme: 8,
-      price: 59.99
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
+        name: "camisa-8",
+        imageUrl: <Image src= "/imagens/temme8.jpg"/>,
+        id: 8,
+        price: 59.99
       }
     ],
-    
     carrinho:  [],
-  }
+    orderProducts: "Preço: Crescente"
+  };
+
+  componentDidMount() {
+    const cartString = localStorage.getItem("cart");
+    const cartObject = JSON.parse(cartString);
+    if(cartObject) {
+      this.setState({cartProducts: cartObject});
+    };
+  };
+
+  componentDidUpdate() {
+    const objectCart = this.state.cartProducts
+    localStorage.setItem("cart", JSON.stringify(objectCart));
+  };
+  
+  orderChange = (event) =>{
+    this.setState({
+      orderProducts: event.target.value
+    });
+
 
   /* Adcionando ao carrinho */
-<<<<<<< HEAD
+
      addProductCart = (id) => {
         let newCart = this.state.carrinho
         let produtoExiste =  newCart.findIndex(produto => produto.id === id)
@@ -203,35 +215,14 @@ export class App extends React.Component{
             if(produtoExiste === -1){
         const produto =  this.state.cardProducts.find(item  => item.id === id) 
         const produtoAddCarrinho = {
-=======
-     adicionarProdutoCarrinho = (id) => {
-       console.log("ola")
-      let novoCarrinho = this.state.carrinho
-        //buscar produto na lista de carrinho pra saber se ja foi adcionado
-        //produtoExiste recebe o index de cada produto que está no carrinho
-       const produtoExiste =  novoCarrinho.findIndex(produto => produto.id === id)
-      /*  console.log(produtoExiste)
-       console.log(this.carrinho)
-       console.log(id, "id da função carrinho") */
 
-      //Método findindex senao encontrar um produto no array retorna -1
-          if(produtoExiste === -1){
-          const produto =  this.state.produtos.find(item  => item.id === id) 
-         /*  console.log(produto, "produto") */
-          const produtoAddCarrinho = {
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
             id: produto.id,
             price: produto.price,
             quantidade: 1
         }
-<<<<<<< HEAD
+
         newCart.push(produtoAddCarrinho)
-=======
 
-        novoCarrinho.push(produtoAddCarrinho)
-        /* console.log(novoCarrinho, "novo carrinho") */
-
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
        } else {
         const qtde = newCart[produtoExiste].quantidade
         newCart[produtoExiste] = {
@@ -252,55 +243,57 @@ export class App extends React.Component{
   }
 
   render() {
+    const visualization = this.state.cardProducts
+    const orderVisualization = visualization.sort((a,b) =>{
+      const order = this.state.orderProducts
+      if(order === 'Preço: Crescente'){
+        return a.price - b.price
+      }else {
+        return b.price - a.price
+      }
+    });
+
     const renderizeCard = this.state.cardProducts.map((products) =>{
       return(
         <ContainerImg>
-            {products.imageUrl}
+          {products.imageUrl}
           <FigCaption>
+            <Paragrafe>{products.name}</Paragrafe>
             {products.price}
-<<<<<<< HEAD
+
+
             <Button onClick={() => this.addProductCart(products.id)}>Adicionar ao carrinho</Button>
-=======
-            <button>Adicionar ao carrinho</button>
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
+
+     
           </FigCaption>
         </ContainerImg>
         
       )
     })
     return (
-<<<<<<< HEAD
-      <ContainerApp>
-      <BigContainer>
+
+      <Father>
+        <Header>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
-        {renderizeCard}
+          <MenuSuspenso value={this.state.orderProducts} onChange={this.orderChange}>
+            <option>Preço: Crescente</option>
+            <option>Preço: Decrescente</option>
+          </MenuSuspenso>
+        </Header>
+
+        <BigContainer>
+          {renderizeCard}
         </BigContainer>
         <ContainerCarrinho>
             <Cart
-=======
-      <BigContainer>
-          <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
-        {renderizeCard}
-      
-        <ContainerCarrinho>
-
-            <Carrinho
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
             addProdutosCarrinho = {this.state.carrinho}
             removerProdutoCarrinho = {this.removerProdutoCarrinho}
             />
-          
-          </ContainerCarrinho>
-<<<<<<< HEAD
-     
-      </ContainerApp> 
-=======
-      </BigContainer>
->>>>>>> d186901e00ef9de4f7d111f1378c04a5d5131c51
+        </ContainerCarrinho>
+      </Father>
+
     );
   }
 }
-
-
 
 export default App;
