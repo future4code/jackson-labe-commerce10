@@ -1,6 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import Carrinho from './components/Carrinho/Carrinho'
 
+const ContainerCarrinho = styled.div ` 
+    border: 1px solid #000;
+    background-color:#C0C0C0;
+`
 
 const ContainerImg = styled.figure`
   float: rigth;
@@ -81,12 +86,55 @@ export class App extends React.Component{
         temme: 8,
       price: 59.99
       }
-    ]
+    ],
+    
+    carrinho:  [],
   }
 
-  
-  
-  
+  /* Adcionando ao carrinho */
+     adicionarProdutoCarrinho = (id) => {
+       console.log("ola")
+      let novoCarrinho = this.state.carrinho
+        //buscar produto na lista de carrinho pra saber se ja foi adcionado
+        //produtoExiste recebe o index de cada produto que está no carrinho
+       const produtoExiste =  novoCarrinho.findIndex(produto => produto.id === id)
+      /*  console.log(produtoExiste)
+       console.log(this.carrinho)
+       console.log(id, "id da função carrinho") */
+
+      //Método findindex senao encontrar um produto no array retorna -1
+          if(produtoExiste === -1){
+          const produto =  this.state.produtos.find(item  => item.id === id) 
+         /*  console.log(produto, "produto") */
+          const produtoAddCarrinho = {
+            id: produto.id,
+            nome: produto.name,
+            valor: produto.value,
+            quantidade: 1
+        }
+
+        novoCarrinho.push(produtoAddCarrinho)
+        /* console.log(novoCarrinho, "novo carrinho") */
+
+       } else {
+        const qtde = novoCarrinho[produtoExiste].quantidade
+        novoCarrinho[produtoExiste] = {
+            ...novoCarrinho[produtoExiste], 
+            quantidade: qtde + 1
+        }
+    }
+    console.log(novoCarrinho, "novo carrinho")
+    this.setState({ carrinho: novoCarrinho })
+}
+                     
+  //Removendo o produto do carrinho
+  removerProdutoCarrinho = (produtoId) => {
+      const removeProdutoCarrinho = this.state.carrinho.filter(produto => {
+      return produtoId !== produto.id;
+    })
+    this.setState({carrinho : removeProdutoCarrinho})
+  }
+
   render() {
     const renderizeCard = this.state.cardProducts.map((products) =>{
       return(
@@ -97,12 +145,23 @@ export class App extends React.Component{
             <button>Adicionar ao carrinho</button>
           </FigCaption>
         </ContainerImg>
+        
       )
     })
     return (
       <BigContainer>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
         {renderizeCard}
+      
+        <ContainerCarrinho>
+
+            <Carrinho
+            addProdutosCarrinho = {this.state.carrinho}
+            removerProdutoCarrinho = {this.removerProdutoCarrinho}
+            
+            />
+          
+          </ContainerCarrinho>
       </BigContainer>
     );
   }
