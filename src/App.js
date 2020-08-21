@@ -1,7 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
+import Cart from './components/Cart/Cart'
 
 
+const ContainerCarrinho = styled.div ` 
+    border: 1px solid #000;
+    background-color:#C0C0C0;
+   
+`;
+
+const ContainerImg = styled.figure`
+  float: right;  
+  width: 30%;
+  text-align: center;
+  font-weight: 550;
+  font-size: 1.2rem;
+  border: thin solid white;
+  margin: .3em;
+  padding: .4em;
+`;  
 const ContainerImg = styled.figure`
   width: 85%;
   text-align: center;
@@ -99,6 +116,18 @@ const Text = styled.h5`
   font-family: sans-serif;
 `;
 
+const Button = styled.button ` 
+  font-size: 16px;
+  width: 90%;
+  margin-left: 15px;
+  
+  &:hover{
+    color: #FFf;
+    background-color: #696969;
+    
+  }
+`;
+
 export class App extends React.Component{
   state={
     cardProducts:[
@@ -151,6 +180,7 @@ export class App extends React.Component{
         price: 59.99
       }
     ],
+    carrinho:  [],
     orderProducts: "Preço: Crescente"
   };
 
@@ -162,7 +192,7 @@ export class App extends React.Component{
     };
   };
 
-  componentDidiUpdate() {
+  componentDidUpdate() {
     const objectCart = this.state.cartProducts
     localStorage.setItem("cart", JSON.stringify(objectCart));
   };
@@ -171,8 +201,47 @@ export class App extends React.Component{
     this.setState({
       orderProducts: event.target.value
     });
-  };
+
+
+  /* Adcionando ao carrinho */
+
+     addProductCart = (id) => {
+        let newCart = this.state.carrinho
+        let produtoExiste =  newCart.findIndex(produto => produto.id === id)
+        console.log(produtoExiste, "produto existe")
   
+        console.log(this.state.cardProducts, "cardprodutos")
+        console.log(id, "id")
+            if(produtoExiste === -1){
+        const produto =  this.state.cardProducts.find(item  => item.id === id) 
+        const produtoAddCarrinho = {
+
+            id: produto.id,
+            price: produto.price,
+            quantidade: 1
+        }
+
+        newCart.push(produtoAddCarrinho)
+
+       } else {
+        const qtde = newCart[produtoExiste].quantidade
+        newCart[produtoExiste] = {
+            ...newCart[produtoExiste], 
+            quantidade: qtde + 1
+        }
+    }
+    console.log(newCart, "novo carrinho")
+    this.setState({ carrinho: newCart })
+}
+                     
+  //Removendo o produto do carrinho
+  removerProdutoCarrinho = (produtoId) => {
+      const removeProdutoCarrinho = this.state.carrinho.filter(produto => {
+      return produtoId !== produto.id;
+    })
+    this.setState({carrinho : removeProdutoCarrinho})
+  }
+
   render() {
     const visualization = this.state.cardProducts
     const orderVisualization = visualization.sort((a,b) =>{
@@ -191,12 +260,18 @@ export class App extends React.Component{
           <FigCaption>
             <Paragrafe>{products.name}</Paragrafe>
             {products.price}
-            <Button>Adicionar ao carrinho</Button>
+
+
+            <Button onClick={() => this.addProductCart(products.id)}>Adicionar ao carrinho</Button>
+
+     
           </FigCaption>
         </ContainerImg>
+        
       )
     })
     return (
+
       <Father>
         <Header>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
@@ -209,11 +284,16 @@ export class App extends React.Component{
         <BigContainer>
           {renderizeCard}
         </BigContainer>
+        <ContainerCarrinho>
+            <Cart
+            addProdutosCarrinho = {this.state.carrinho}
+            removerProdutoCarrinho = {this.removerProdutoCarrinho}
+            />
+        </ContainerCarrinho>
       </Father>
+
     );
   }
 }
-
-
 
 export default App;
