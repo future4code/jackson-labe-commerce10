@@ -13,7 +13,7 @@ const ContainerImg = styled.figure`
   padding: .4em;
 `;
 
-const Imagem = styled.img`
+const Image = styled.img`
   width: 90%;
 `;
 
@@ -42,48 +42,60 @@ export class App extends React.Component{
   state={
     cardProducts:[
       {
-      imageUrl: <Imagem src= "/imagens/temme1.jpg"/>,
-      temme: 1,
-      price: 79.99
+        imageUrl: <Image src= "/imagens/temme1.jpg"/>,
+        temme: 1,
+        price: 79.99
       },
       {
-      imageUrl: <Imagem src= "/imagens/temme2.jpg"/>,
-      temme: 2,
-      price: 49.99
+        imageUrl: <Image src= "/imagens/temme2.jpg"/>,
+        temme: 2,
+        price: 49.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme3.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme3.jpg"/>,
         temme: 3,
-      price: 59.99
+        price: 59.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme4.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme4.jpg"/>,
         temme: 4,
-      price: 29.99
+        price: 29.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme5.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme5.jpg"/>,
         temme: 5,
-      price: 29.99
+        price: 29.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme6.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme6.jpg"/>,
         temme: 6,
-      price: 49.99
+        price: 49.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme7.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme7.jpg"/>,
         temme: 7,
-      price: 79.99
+        price: 79.99
       },
       {
-        imageUrl: <Imagem src= "/imagens/temme8.jpg"/>,
+        imageUrl: <Image src= "/imagens/temme8.jpg"/>,
         temme: 8,
-      price: 59.99
+        price: 59.99
       }
     ]
   }
 
+  componentDidMount() {
+    const cartString = localStorage.getItem("cart");
+    const cartObject = JSON.parse(cartString);
+    if(cartObject) {
+      this.setState({cartProducts: cartObject});
+    };
+  };
+
+  componentDidiUpdate() {
+    const objectCart = this.state.cartProducts
+    localStorage.setItem("cart", JSON.stringify(objectCart));
+  };
   
   
   
