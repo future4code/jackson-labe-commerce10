@@ -5,7 +5,8 @@ const ContainerItem = styled.div `
   display: flex;
   flex-direction: column;
   height: 30%;
-  width: 100%; 
+  width: 90%;
+  box-shadow: -2px 3px 4px #7e7e7e;
   background-color: #4682b4;
 `
 
@@ -29,6 +30,7 @@ const CardList = styled.div `
    text-shadow: -1px 1px 4px white;
  }
  `;
+
 const Botao = styled.button ` 
   width: 15%;
   border-radius: 100px;
@@ -36,6 +38,7 @@ const Botao = styled.button `
   left: 4em;
   top: 2.3em;
 `;
+
 const Total = styled.h3`  
   text-align: center;
   text-shadow: -2px 1px 5px blue;

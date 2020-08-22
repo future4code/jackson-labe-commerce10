@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import Cart from './components/Cart/Cart'
+import Filter from './components/Filter'
+
 
 
 const ContainerImg = styled.figure`
@@ -27,6 +29,11 @@ const Image = styled.img`
 const FigCaption = styled.figcaption`
   display: flex;
   flex-direction:column;
+
+  p{
+    margin: 0;
+    margin-bottom: 8px;
+  }
 `;
 
 const Paragrafe = styled.p`
@@ -75,10 +82,20 @@ const BigContainer = styled.div`
 `;
 
 const Header = styled.header`
+  position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;
   background-color: #314772;
+`;
+
+const ImgFilter = styled.img`
+  position: absolute;
+  left: 55%;
+  top: 30%;
+  width: 6%;
+  height: 50%;
+
 `;
 
 const MenuSuspenso = styled.select`
@@ -107,7 +124,7 @@ const ImgButton = styled.img`
   width: 4em;
   height: 4em;
   border-radius: 150px;
-  top: 285em;
+  top: 97%;
   left: 84%;
   padding: 0;
   border: none;
@@ -118,6 +135,7 @@ const ImgButton = styled.img`
     box-shadow: -2px 2px 2px black;
   }
 `;
+
 
 export class App extends React.Component{
   state={
@@ -171,9 +189,15 @@ export class App extends React.Component{
         price: 59.99
       }
     ],
+
+    minInputValue: 0,
+    maxInputValue: Infinity,
+    searchByName: "",
+
     carrinho:  [],
     orderProducts: "Preço: Crescente",
-    visibleCart: false
+    visibleCart: false,
+    visibleFilter: false
   };
 
   componentDidMount() {
@@ -193,24 +217,50 @@ export class App extends React.Component{
     this.setState({
       orderProducts: event.target.value
     });
+  };
+
+  filterProducts = () => {
+    const filterCurrentProducts = this.state.cardProducts.filter((produto) => {
+      if (this.state.maxInputValue !==0 ) {
+        return produto.price >= this.state.minInputValue &&
+               produto.price <= this.state.maxInputValue;
+      } else {
+        return this.setState({maxInputValue: Infinity}, this.filterProducts)
+      }
+    });
+
+    this.setState({produtos: filterCurrentProducts})
   }
+
+  updateMinInputValue = (newMinInputValue) => {
+    this.setState({minInputValue: newMinInputValue}, this.filterProducts)
+  }
+
+  updateMaxInputValue = (newMaxInputValue) => {
+    this.setState({maxInputValue: newMaxInputValue}, this.filterProducts)
+  } 
+
+  /* Adcionando ao carrinho */
 
   addProductCart = (id) => {
     let newCart = this.state.carrinho
     let produtoExiste =  newCart.findIndex(produto => produto.id === id)
+    console.log(produtoExiste, "produto existe")
+    console.log(this.state.cardProducts, "cardprodutos")
+    console.log(id, "id")
     if(produtoExiste === -1){
       const produto =  this.state.cardProducts.find(item  => item.id === id) 
-      const produtoAddCarrinho ={ 
-        id: produto.id,
-        price: produto.price,
-        quantidade: 1
-      }
-      newCart.push(produtoAddCarrinho)
-    } else {
+      const produtoAddCarrinho = {
+      id: produto.id,
+      price: produto.price,
+      quantidade: 1
+    }
+    newCart.push(produtoAddCarrinho)
+    }else {
       const qtde = newCart[produtoExiste].quantidade
       newCart[produtoExiste] = {
-          ...newCart[produtoExiste], 
-          quantidade: qtde + 1
+        ...newCart[produtoExiste], 
+        quantidade: qtde + 1
       }
     }
     this.setState({ carrinho: newCart })
@@ -226,6 +276,10 @@ export class App extends React.Component{
 
   toggleCart = () =>{
     this.setState({visibleCart: !this.state.visibleCart})
+  };
+
+  toggleFilter = () =>{
+    this.setState({visibleFilter: !this.state.visibleFilter})
   };
 
   render() {
@@ -252,16 +306,23 @@ export class App extends React.Component{
       )
     });
 
+    const showMeFilter = this.state.visibleFilter &&
+    <Filter
+    onMinValueFilterChange={this.updateMinInputValue}
+    onMaxValueFilterChange={this.updateMaxInputValue}
+    />
+
     const showMe = this.state.visibleCart && 
     <Cart
     addProdutosCarrinho = {this.state.carrinho}
     removerProdutoCarrinho = {this.removerProdutoCarrinho}
     />
-
+    
     return (
       <Father>
         <Header>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
+          <ImgFilter onClick={this.toggleFilter} src="/imagens/filter.png"/>
           <MenuSuspenso value={this.state.orderProducts} onChange={this.orderChange}>
             <option>Preço: Crescente</option>
             <option>Preço: Decrescente</option>
@@ -269,6 +330,7 @@ export class App extends React.Component{
         </Header>
 
         <BigContainer>
+          {showMeFilter}
           {renderizeCard}
           <ImgButton onClick={this.toggleCart} src="/imagens/carrinho-de-compras.png"/>
           {showMe}
