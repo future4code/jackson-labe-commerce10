@@ -3,27 +3,12 @@ import styled from 'styled-components'
 import Cart from './components/Cart/Cart'
 
 
-const ContainerCarrinho = styled.div ` 
-    border: 1px solid #000;
-    background-color:#C0C0C0;
-   
-`;
-
-const ContainerImg = styled.figure`
-  float: right;  
-  width: 30%;
-  text-align: center;
-  font-weight: 550;
-  font-size: 1.2rem;
-  border: thin solid white;
-  margin: .3em;
-  padding: .4em;
-`;  
 const ContainerImg = styled.figure`
   width: 85%;
   text-align: center;
   font-weight: 550;
   font-size: 2.2rem;
+  text-shadow: -1px 1px 4px blue;
   border: thin solid white;
   margin: .3em;
   padding: .4em;
@@ -78,6 +63,7 @@ const BigContainer = styled.div`
   width: 100%;
   height: 100%;
   background-color: #314772;
+  position: relative;
 
   @media (min-width: 698px){
     display: grid;
@@ -97,7 +83,7 @@ const Header = styled.header`
 
 const MenuSuspenso = styled.select`
   margin: 15px;
-  width: 20%;
+  width: 30%;
   box-shadow: -4px 4px;
   height: 40%;
   :focus{
@@ -116,15 +102,20 @@ const Text = styled.h5`
   font-family: sans-serif;
 `;
 
-const Button = styled.button ` 
-  font-size: 16px;
-  width: 90%;
-  margin-left: 15px;
-  
-  &:hover{
-    color: #FFf;
-    background-color: #696969;
-    
+const ImgButton = styled.img`
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  border-radius: 150px;
+  top: 285em;
+  left: 84%;
+  padding: 0;
+  border: none;
+  box-shadow: -3px -2px 4px gray;
+
+  :focus{
+    outline: none;
+    box-shadow: -2px 2px 2px black;
   }
 `;
 
@@ -181,58 +172,49 @@ export class App extends React.Component{
       }
     ],
     carrinho:  [],
-    orderProducts: "Preço: Crescente"
+    orderProducts: "Preço: Crescente",
+    visibleCart: false
   };
 
   componentDidMount() {
-    const cartString = localStorage.getItem("cart");
+    const cartString = localStorage.getItem("carrinho");
     const cartObject = JSON.parse(cartString);
     if(cartObject) {
-      this.setState({cartProducts: cartObject});
+      this.setState({carrinho: cartObject});
     };
   };
 
   componentDidUpdate() {
-    const objectCart = this.state.cartProducts
-    localStorage.setItem("cart", JSON.stringify(objectCart));
+    const objectCart = this.state.carrinho
+    localStorage.setItem("carrinho", JSON.stringify(objectCart));
   };
   
   orderChange = (event) =>{
     this.setState({
       orderProducts: event.target.value
     });
+  }
 
-
-  /* Adcionando ao carrinho */
-
-     addProductCart = (id) => {
-        let newCart = this.state.carrinho
-        let produtoExiste =  newCart.findIndex(produto => produto.id === id)
-        console.log(produtoExiste, "produto existe")
-  
-        console.log(this.state.cardProducts, "cardprodutos")
-        console.log(id, "id")
-            if(produtoExiste === -1){
-        const produto =  this.state.cardProducts.find(item  => item.id === id) 
-        const produtoAddCarrinho = {
-
-            id: produto.id,
-            price: produto.price,
-            quantidade: 1
-        }
-
-        newCart.push(produtoAddCarrinho)
-
-       } else {
-        const qtde = newCart[produtoExiste].quantidade
-        newCart[produtoExiste] = {
-            ...newCart[produtoExiste], 
-            quantidade: qtde + 1
-        }
+  addProductCart = (id) => {
+    let newCart = this.state.carrinho
+    let produtoExiste =  newCart.findIndex(produto => produto.id === id)
+    if(produtoExiste === -1){
+      const produto =  this.state.cardProducts.find(item  => item.id === id) 
+      const produtoAddCarrinho ={ 
+        id: produto.id,
+        price: produto.price,
+        quantidade: 1
+      }
+      newCart.push(produtoAddCarrinho)
+    } else {
+      const qtde = newCart[produtoExiste].quantidade
+      newCart[produtoExiste] = {
+          ...newCart[produtoExiste], 
+          quantidade: qtde + 1
+      }
     }
-    console.log(newCart, "novo carrinho")
     this.setState({ carrinho: newCart })
-}
+  };
                      
   //Removendo o produto do carrinho
   removerProdutoCarrinho = (produtoId) => {
@@ -240,7 +222,11 @@ export class App extends React.Component{
       return produtoId !== produto.id;
     })
     this.setState({carrinho : removeProdutoCarrinho})
-  }
+  };
+
+  toggleCart = () =>{
+    this.setState({visibleCart: !this.state.visibleCart})
+  };
 
   render() {
     const visualization = this.state.cardProducts
@@ -259,19 +245,20 @@ export class App extends React.Component{
           {products.imageUrl}
           <FigCaption>
             <Paragrafe>{products.name}</Paragrafe>
-            {products.price}
-
-
+            <p>R$ {products.price}</p>
             <Button onClick={() => this.addProductCart(products.id)}>Adicionar ao carrinho</Button>
-
-     
           </FigCaption>
         </ContainerImg>
-        
       )
-    })
-    return (
+    });
 
+    const showMe = this.state.visibleCart && 
+    <Cart
+    addProdutosCarrinho = {this.state.carrinho}
+    removerProdutoCarrinho = {this.removerProdutoCarrinho}
+    />
+
+    return (
       <Father>
         <Header>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
@@ -283,17 +270,14 @@ export class App extends React.Component{
 
         <BigContainer>
           {renderizeCard}
+          <ImgButton onClick={this.toggleCart} src="/imagens/carrinho-de-compras.png"/>
+          {showMe}
         </BigContainer>
-        <ContainerCarrinho>
-            <Cart
-            addProdutosCarrinho = {this.state.carrinho}
-            removerProdutoCarrinho = {this.removerProdutoCarrinho}
-            />
-        </ContainerCarrinho>
+        
       </Father>
 
     );
-  }
+  };
 }
 
-export default App;
+export default App
