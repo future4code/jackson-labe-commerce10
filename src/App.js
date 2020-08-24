@@ -9,7 +9,7 @@ const ContainerImg = styled.figure`
   width: 85%;
   text-align: center;
   font-weight: 550;
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   text-shadow: -1px 1px 4px blue;
   border: thin solid white;
   margin: .3em;
@@ -18,12 +18,14 @@ const ContainerImg = styled.figure`
 
   @media (min-width: 698px){
     margin:0%;
+    font-size: 1rem;
+
   }
 `;
 
 const Image = styled.img`
   width: 90%;
-  height: 70%;
+  height: 75%;
 `;
 
 const FigCaption = styled.figcaption`
@@ -46,8 +48,7 @@ const Button = styled.button`
   height: 5%;
   width: 50%;
   border-radius: 7px;
-  position: relative;
-  left: 25%;
+  margin-left: 5.5em;
   word-wrap: break-word;
   font-size: .5em;
   :hover{
@@ -57,10 +58,30 @@ const Button = styled.button`
     outline:none;
     box-shadow: 4px 4px withe
   };
+
+  @media (min-width: 698px){
+    width: 70%;
+    font-size: ${(props) => props.visibility ? ".6rem" : "1rem"};
+    font-weight: 600;
+    margin-left: 15%;
+    height: 30px;
+  }
 `;
 
 const Father = styled.main`
+  @media (min-width: 698px){
+  }
   
+`;
+
+const BigHugh = styled.div`
+  @media (min-width: 698px){
+    display: grid;
+    grid-template-columns: ${(props) => props.visibility ? "1fr 1fr 3fr" : "1fr 3fr"};
+    background-color: #314772;
+    column-gap: 5px;
+    height: 94vh;
+  }
 `;
 
 const BigContainer = styled.div`
@@ -68,14 +89,13 @@ const BigContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 95%;
   background-color: #314772;
-  position: relative;
 
   @media (min-width: 698px){
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 5px;
     align-items: center;
     justify-items: center;
   }
@@ -87,25 +107,25 @@ const Header = styled.header`
   justify-content: space-between;
   width: 100%;
   background-color: #314772;
-`;
 
-const ImgFilter = styled.img`
-  position: absolute;
-  left: 55%;
-  top: 30%;
-  width: 6%;
-  height: 50%;
-
+  @media (min-width: 698px){
+    justify-content: none;
+    position: static;
+  }
 `;
 
 const MenuSuspenso = styled.select`
   margin: 15px;
-  width: 30%;
+  width: 68%;
   box-shadow: -4px 4px;
   height: 40%;
   :focus{
     outline:none;
   };
+
+  @media (min-width: 698px){
+    max-width: 20%;
+  }
 `;
 
 const Text = styled.h5`
@@ -117,22 +137,50 @@ const Text = styled.h5`
   color: white;
   text-shadow: -3px 2px black;
   font-family: sans-serif;
+
+  @media (min-width: 698px){
+    padding-left: 10em;
+  }
+`;
+
+const TakeCart = styled.section`
+  position: fixed;
+  width: 80%;
+  left: 50px;
+  top: 150px;
+
+  @media (min-width: 698px){
+    position: static;
+    overflow: hidden;
+    width: 100%;
+  }
 `;
 
 const ImgButton = styled.img`
-  position: absolute;
+  position: fixed;
   width: 4em;
   height: 4em;
   border-radius: 150px;
-  top: 97%;
-  left: 84%;
+  top: 85px;
+  left: 250px;
   padding: 0;
   border: none;
-  box-shadow: -3px -2px 4px gray;
+  box-shadow: -1px -2px 4px gray;
+  transition: box-shadow 0.5s ease 0s;
 
   :focus{
     outline: none;
     box-shadow: -2px 2px 2px black;
+  };
+
+  :hover{
+    box-shadow: 1px 3px 4px white;
+  };
+
+
+  @media (min-width: 698px){
+    top: 43em;
+    left: 102em;
   }
 `;
 
@@ -190,14 +238,15 @@ export class App extends React.Component{
       }
     ],
 
-    minInputValue: 0,
-    maxInputValue: Infinity,
-    searchByName: "",
+    filters:{
+      minInputValue: null,
+      maxInputValue: null,
+      searchByName: "",
+    },
 
     carrinho:  [],
     orderProducts: "Preço: Crescente",
     visibleCart: false,
-    visibleFilter: false
   };
 
   componentDidMount() {
@@ -219,26 +268,68 @@ export class App extends React.Component{
     });
   };
 
+  updateValue = (newValue) => {
+    this.setState({filters: {...this.state.filters, ...newValue,}
+    });
+  };
+
+  onSearchProductChange = (event) => {
+    this.setState({
+      searchByName: event.target.value
+    })
+  };
+
   filterProducts = () => {
-    const filterCurrentProducts = this.state.cardProducts.filter((produto) => {
-      if (this.state.maxInputValue !==0 ) {
-        return produto.price >= this.state.minInputValue &&
-               produto.price <= this.state.maxInputValue;
-      } else {
-        return this.setState({maxInputValue: Infinity}, this.filterProducts)
-      }
+    const filters = this.state.filters
+    const search = this.state.searchByName
+    const productsArray = this.state.cardProducts
+    const filterCurrentProducts = productsArray.filter((produto) => {
+      const name = produto.name.toLowerCase()
+      return name.indexOf(search) > -1 
+     })
+    .filter((produto) => {
+      return produto.price < (filters.maxInputValue || Infinity)
+    })
+    .filter((produto) => {
+      return produto.price > (filters.minInputValue || 0)
     });
 
-    this.setState({produtos: filterCurrentProducts})
-  }
+    return filterCurrentProducts
+  };  
 
-  updateMinInputValue = (newMinInputValue) => {
-    this.setState({minInputValue: newMinInputValue}, this.filterProducts)
-  }
+  // filterProducts = () => {
+  //   const filters = this.state.filters
+  //   const search = this.state.searchByName
+  //   const filterCurrentProducts = this.state.cardProducts.filter((produto) => {
+  //     const name = produto.name.toLowerCase()
+      // return name.indexOf(search) > -1 
+      // if (this.state.maxInputValue !==0 ) {
+      //   return produto.price >= this.state.minInputValue &&
+      //          produto.price <= this.state.maxInputValue;
+      // } else {
+      //   return this.setState({maxInputValue: Infinity}, this.filterProducts)
+      // }
+  //   });
+  //   const filterCurrentProducts1 = this.state.cardProducts.filter((produto) => {
+  //     return produto.price < (filters.maxInputValue || Infinity)
+  //   });
+  //   const filterCurrentProducts2 = this.state.cardProducts.filter((produto) => {
+  //     return produto.price > (filters.minInputValue || 0)
+  //   });
+    
+  //   return (filterCurrentProducts, filterCurrentProducts1, filterCurrentProducts2)
+  // };
 
-  updateMaxInputValue = (newMaxInputValue) => {
-    this.setState({maxInputValue: newMaxInputValue}, this.filterProducts)
-  } 
+  // this.setState({produtos: filterCurrentProducts, filterCurrentProducts1, filterCurrentProducts2})
+
+
+  // updateMinInputValue = (newMinInputValue) => {
+  //   this.setState({minInputValue: newMinInputValue}, this.filterProducts)
+  // }
+
+  // updateMaxInputValue = (newMaxInputValue) => {
+  //   this.setState({maxInputValue: newMaxInputValue}, this.filterProducts)
+  // } 
 
   /* Adcionando ao carrinho */
 
@@ -278,9 +369,14 @@ export class App extends React.Component{
     this.setState({visibleCart: !this.state.visibleCart})
   };
 
-  toggleFilter = () =>{
-    this.setState({visibleFilter: !this.state.visibleFilter})
-  };
+  // sortOrder = (a,b) =>{
+  //   const order = this.state.orderProducts
+  //   if(order === 'Preço: Crescente'){
+  //     return a.price - b.price
+  //   }else {
+  //     return b.price - a.price
+  //   }
+  // };
 
   render() {
     const visualization = this.state.cardProducts
@@ -300,42 +396,62 @@ export class App extends React.Component{
           <FigCaption>
             <Paragrafe>{products.name}</Paragrafe>
             <p>R$ {products.price}</p>
-            <Button onClick={() => this.addProductCart(products.id)}>Adicionar ao carrinho</Button>
+            <Button visibility = {this.state.visibleCart} onClick={() => this.addProductCart(products.id)}>Adicionar ao carrinho</Button>
           </FigCaption>
         </ContainerImg>
       )
     });
+    
+    const filters = this.state.filters
+    const search = this.state.searchByName
+    const productsArray = this.state.cardProducts
+    const takeFunction = productsArray.filter((produto) => {
+      const name = produto.name.toLowerCase()
+      return name.indexOf(search) > -1 
+     })
+    .filter((produto) => {
+      return produto.price < (filters.maxInputValue || Infinity)
+    })
+    .filter((produto) => {
+      return produto.price > (filters.minInputValue || 0)
+    });
 
-    const showMeFilter = this.state.visibleFilter &&
-    <Filter
-    onMinValueFilterChange={this.updateMinInputValue}
-    onMaxValueFilterChange={this.updateMaxInputValue}
-    />
 
     const showMe = this.state.visibleCart && 
-    <Cart
-    addProdutosCarrinho = {this.state.carrinho}
-    removerProdutoCarrinho = {this.removerProdutoCarrinho}
-    />
+    <TakeCart>
+      <Cart
+      addProdutosCarrinho = {this.state.carrinho}
+      removerProdutoCarrinho = {this.removerProdutoCarrinho}
+      />
+    </TakeCart>
     
+    
+
     return (
       <Father>
         <Header>
           <Text>Quantidade de produtos: {this.state.cardProducts.length}</Text>
-          <ImgFilter onClick={this.toggleFilter} src="/imagens/filter.png"/>
           <MenuSuspenso value={this.state.orderProducts} onChange={this.orderChange}>
             <option>Preço: Crescente</option>
             <option>Preço: Decrescente</option>
           </MenuSuspenso>
         </Header>
-
-        <BigContainer>
-          {showMeFilter}
-          {renderizeCard}
+        <BigHugh visibility = {this.state.visibleCart}>
+          <Filter
+            valueFilterChange = {this.updateValue}
+            valueSearch = {this.state.searchByName}
+            searchChange = {this.onSearchProductChange}
+          // onMinValueFilterChange={this.updateMinInputValue}
+          // onMaxValueFilterChange={this.updateMaxInputValue}
+          />
+          {takeFunction}
           <ImgButton onClick={this.toggleCart} src="/imagens/carrinho-de-compras.png"/>
           {showMe}
-        </BigContainer>
-        
+          <BigContainer>
+            {renderizeCard}
+          </BigContainer>
+          
+        </BigHugh>
       </Father>
 
     );

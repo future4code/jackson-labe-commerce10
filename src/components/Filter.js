@@ -5,7 +5,7 @@ const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
+  width: 100%;
   height: 15%;
   background-color: #2f4f4f;
   padding-bottom: 20px;
@@ -13,6 +13,10 @@ const FilterContainer = styled.div`
 
   label{
     font-weight: 500;
+
+    @media (min-width: 698px){
+      font-size: .8rem;
+    }
   };
 
   h2{
@@ -23,6 +27,14 @@ const FilterContainer = styled.div`
   font-weight: 700;
   color: #696969;
   margin: 10px 0px 8px; 
+  };
+
+  @media (min-width: 698px){
+    width: 18vw;
+    height: 100%;
+    padding-bottom: 0px;
+    margin-right: 0px;
+
   }
 `;
 
@@ -33,33 +45,34 @@ const Input = styled.input`
   :focus{
     outline:none;
     box-shadow: 2px 2px black;
+  };
+
+  @media (min-width: 698px){
+    width: 70%;
   }
 `;
 
-const ButtonGetFilter = styled.button`
-  margin-top: 10px;
-  width: 30%;
-  font-weight: 700;
-  border-radius: 100px;
-`;
+
 
 class Filter extends React.Component {
 
   onMinValueChange = (event) => {
-    const getInputMinValue = Number(event.target.value);
-    this.props.onMinValueFilterChange(getInputMinValue);
+    const getInputMinValue = Number(event.target.value)
+    const newValue = {"minInputValue": getInputMinValue,}
+    this.props.valueFilterChange(newValue)
   };
 
   onMaxValueChange = (event) => {
-    const getInputMaxValue = Number(event.target.value);
-    this.props.onMaxValueFilterChange(getInputMaxValue);
+    const getInputMaxValue = Number(event.target.value)
+    const newValue = {"maxInputValue": getInputMaxValue}
+    this.props.valueFilterChange(newValue)
   };
 
-  onSearchProductChange = (event) => {
-    const getProductName = Number(event.target.value);
-    this.props.onSearchProductFilterChange(getProductName);
+  // onSearchProductChange = (event) => {
+  //   const getProductName = Number(event.target.value);
+  //   this.props.onSearchProductFilterChange(getProductName);
 
-  };
+  // };
 
   // getFilter = () =>{
   //   {this.setState ${({visibleFilter}) !this.visibleFilter}}
@@ -74,8 +87,7 @@ class Filter extends React.Component {
         <label htmlFor="valorMaximo">Valor Máximo:</label>
         <Input type="number" id="valorMaximo" onChange={this.onMaxValueChange}/>
         <label htmlFor="buscarPorNome">Buscar produto:</label>
-        <Input id="buscarPorNome" onChange={this.onSearchProductChange}/>
-        <ButtonGetFilter /*onclick={this.getFilter}*/>Filtrar</ButtonGetFilter>
+        <Input type="text" id="buscarPorNome" value={this.props.valueSearch} onChange={this.props.searchChange}/>
       </FilterContainer>
     )
   }
